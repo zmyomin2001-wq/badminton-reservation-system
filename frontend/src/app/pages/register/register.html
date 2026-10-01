@@ -1,0 +1,123 @@
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+
+          <h2 class="text-center mb-4">Member Registration</h2>
+
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                formControlName="name"
+                placeholder="Enter your full name"
+              />
+
+              @if (registerForm.controls.name.touched &&
+                   registerForm.controls.name.invalid) {
+                <div class="text-danger small mt-1">
+                  Name must be at least 2 characters.
+                </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                formControlName="email"
+                placeholder="Enter your email"
+              />
+
+              @if (registerForm.controls.email.touched &&
+                   registerForm.controls.email.invalid) {
+                <div class="text-danger small mt-1">
+                  Please enter a valid email address.
+                </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                id="password"
+                type="password"
+                class="form-control"
+                formControlName="password"
+                placeholder="Enter your password"
+              />
+
+              @if (registerForm.controls.password.touched &&
+                   registerForm.controls.password.invalid) {
+                <div class="text-danger small mt-1">
+                  Password must be at least 6 characters.
+                </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                class="form-control"
+                formControlName="confirmPassword"
+                placeholder="Confirm your password"
+              />
+
+              @if (registerForm.controls.confirmPassword.touched &&
+                   registerForm.controls.confirmPassword.hasError('required')) {
+                <div class="text-danger small mt-1">
+                  Please confirm your password.
+                </div>
+              }
+
+              @if (registerForm.controls.confirmPassword.touched &&
+                   registerForm.controls.confirmPassword.hasError('passwordMismatch')) {
+                <div class="text-danger small mt-1">
+                  Passwords do not match.
+                </div>
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-success w-100"
+              [disabled]="isLoading()"
+            >
+              {{ isLoading() ? 'Registering...' : 'Register' }}
+            </button>
+
+            @if (message()) {
+              <div
+                class="alert mt-3"
+                [class.alert-success]="isSuccess()"
+                [class.alert-danger]="!isSuccess()"
+                role="alert"
+              >
+                {{ message() }}
+              </div>
+            }
+
+          </form>
+
+          <p class="text-center mt-3 mb-0">
+            Already have an account?
+            <a href="/login">Login</a>
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

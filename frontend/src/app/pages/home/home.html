@@ -1,0 +1,194 @@
+
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">
+      Badminton Booking
+    </a>
+
+    <div class="d-flex gap-2 flex-wrap">
+      @if (isLoggedIn()) {
+        <a href="/my-bookings" class="btn btn-outline-light">
+          My Bookings
+        </a>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="logout()">
+          Logout
+        </button>
+      } @else {
+        <a href="/login" class="btn btn-outline-light">
+          Login
+        </a>
+
+        <a href="/register" class="btn btn-success">
+          Register
+        </a>
+      }
+    </div>
+  </div>
+</nav>
+
+<main class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">Badminton Court Reservation System</h1>
+    <p class="text-muted">
+      Find and book your badminton court easily.
+    </p>
+    <a href="#courts" class="btn btn-success btn-lg">
+      View Courts
+    </a>
+  </div>
+
+  <section id="courts">
+    <h2 class="mb-4">Available Courts</h2>
+
+    @if (errorMessage()) {
+      <div class="alert alert-danger">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (courts().length === 0 && !errorMessage()) {
+      <div class="alert alert-info">
+        No courts available at the moment.
+      </div>
+    }
+
+    <div class="row g-4">
+      @for (court of courts(); track court._id) {
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ court.name }}</h5>
+
+              <p class="card-text">
+                Indoor Badminton Court
+              </p>
+
+              <p class="fw-bold">
+                {{ court.pricePerHour }} THB / hour
+              </p>
+
+              @if (court.status === 'active') {
+                <span class="badge bg-success">Active</span>
+
+                <button
+                  type="button"
+                  class="btn btn-success d-block mt-3"
+                  (click)="selectCourt(court)">
+                  Book Now
+                </button>
+              } @else {
+                <span class="badge bg-secondary">
+                  Maintenance
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (selectedCourt(); as court) {
+    <section class="mt-5" id="booking">
+      <div class="card mx-auto" style="max-width: 550px;">
+        <div class="card-body p-4">
+          <h2 class="h4 mb-3">
+            Book {{ court.name }}
+          </h2>
+
+          <p class="text-muted">
+            {{ court.pricePerHour }} THB / hour
+          </p>
+
+          <form
+            [formGroup]="bookingForm"
+            (ngSubmit)="submitBooking()">
+
+            <div class="mb-3">
+              <label for="bookingDate" class="form-label">
+                Booking Date
+              </label>
+
+              <input
+                id="bookingDate"
+                type="date"
+                class="form-control"
+                formControlName="date">
+
+              @if (bookingForm.controls.date.touched &&
+                   bookingForm.controls.date.invalid) {
+                <div class="text-danger small mt-1">
+                  Please select a date.
+                </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="startTime" class="form-label">
+                Start Time
+              </label>
+
+              <input
+                id="startTime"
+                type="time"
+                class="form-control"
+                formControlName="startTime">
+
+              @if (bookingForm.controls.startTime.touched &&
+                   bookingForm.controls.startTime.invalid) {
+                <div class="text-danger small mt-1">
+                  Please select a start time.
+                </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="endTime" class="form-label">
+                End Time
+              </label>
+
+              <input
+                id="endTime"
+                type="time"
+                class="form-control"
+                formControlName="endTime">
+
+              @if (bookingForm.controls.endTime.touched &&
+                   bookingForm.controls.endTime.invalid) {
+                <div class="text-danger small mt-1">
+                  Please select an end time.
+                </div>
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-success w-100"
+              [disabled]="isBooking()">
+              {{ isBooking() ? 'Booking...' : 'Confirm Booking' }}
+            </button>
+          </form>
+
+          @if (bookingMessage()) {
+            <div
+              class="alert mt-3"
+              [class.alert-success]="bookingSuccess()"
+              [class.alert-danger]="!bookingSuccess()"
+              role="alert">
+              {{ bookingMessage() }}
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+</main>
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+  Badminton Court Reservation System
+</footer>

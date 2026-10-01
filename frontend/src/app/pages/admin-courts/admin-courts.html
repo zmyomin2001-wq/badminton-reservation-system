@@ -1,0 +1,138 @@
+<div class="container py-4">
+
+  <h2 class="mb-4">Admin Court Management</h2>
+
+  <!-- Add / Edit Court -->
+  <div class="card mb-4">
+    <div class="card-body">
+
+      <h5 class="card-title">
+        {{ editingCourtId ? 'Edit Court' : 'Add Court' }}
+      </h5>
+
+      <div class="mb-3">
+        <label class="form-label">Court Name</label>
+
+        <input
+  type="text"
+  class="form-control"
+  [(ngModel)]="courtName"
+  placeholder="Enter court name"
+  required
+  minlength="2"
+>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Price Per Hour</label>
+
+        <input
+  type="number"
+  class="form-control"
+  [(ngModel)]="pricePerHour"
+  min="0"
+  required
+>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+
+        <select
+          class="form-select"
+          [(ngModel)]="status"
+        >
+          <option value="active">Active</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+
+      @if (!editingCourtId) {
+        <button
+          class="btn btn-primary"
+          (click)="addCourt()"
+        >
+          Add Court
+        </button>
+      }
+
+      @if (editingCourtId) {
+        <button
+  type="button"
+  class="btn btn-success me-2"
+  (click)="updateCourt()"
+>
+  Update Court
+</button>
+        <button
+          class="btn btn-secondary"
+          (click)="clearForm()"
+        >
+          Cancel
+        </button>
+      }
+
+    </div>
+  </div>
+
+  <!-- Court List -->
+  <h4>Courts</h4>
+
+  <div class="table-responsive">
+
+    <table class="table table-bordered table-striped">
+
+      <thead>
+        <tr>
+          <th>Court</th>
+          <th>Price / Hour</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @for (court of courts; track court._id) {
+
+          <tr>
+
+            <td>{{ court.name }}</td>
+
+            <td>
+              {{ court.pricePerHour }} THB
+            </td>
+
+            <td>
+              {{ court.status }}
+            </td>
+
+            <td>
+
+              <button
+                class="btn btn-sm btn-warning me-2"
+                (click)="editCourt(court)"
+              >
+                Edit
+              </button>
+
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="deleteCourt(court._id!)"
+              >
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

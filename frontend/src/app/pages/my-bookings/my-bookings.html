@@ -1,0 +1,93 @@
+
+<div class="container py-5">
+  <h1 class="mb-4">My Bookings</h1>
+
+  @if (loading()) {
+    <div class="alert alert-info">
+      Loading bookings...
+    </div>
+  }
+
+  @if (message()) {
+    <div class="alert alert-info">
+      {{ message() }}
+    </div>
+  }
+
+  @if (!loading() && bookings().length === 0 && !message()) {
+    <div class="alert alert-info">
+      You have no bookings yet.
+    </div>
+  }
+
+  @if (bookings().length > 0) {
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Court</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Price / Hour</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (booking of bookings(); track booking._id) {
+            <tr>
+              <td>{{ booking.court.name }}</td>
+
+              <td>{{ booking.date }}</td>
+
+              <td>
+                {{ booking.startTime }} - {{ booking.endTime }}
+              </td>
+
+              <td>
+                {{ booking.court.pricePerHour }} THB
+              </td>
+
+              <td>
+                @if (booking.status === 'confirmed') {
+                  <span class="badge bg-success">
+                    Confirmed
+                  </span>
+                } @else {
+                  <span class="badge bg-secondary">
+                    Cancelled
+                  </span>
+                }
+              </td>
+
+              <td>
+                @if (booking.status === 'confirmed') {
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    [disabled]="cancellingId() !== null"
+                    (click)="cancelBooking(booking._id)">
+                    {{
+                      cancellingId() === booking._id
+                        ? 'Cancelling...'
+                        : 'Cancel Booking'
+                    }}
+                  </button>
+                } @else {
+                  <span class="text-muted">
+                    No action
+                  </span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <a href="/" class="btn btn-outline-primary mt-3">
+    Back to Home
+  </a>
+</div>
