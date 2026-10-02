@@ -1,32 +1,25 @@
-
-const express = require('express');
 const mongoose = require('mongoose');
-const Booking = require('./booking-model');
-const Court = require('./court-model');
-const authMiddleware = require('./auth-middleware');
 
-const router = express.Router();
+const Booking = require('../models/booking-model');
+const Court = require('../models/court-model');
 
 // Create a booking
-router.post('/', authMiddleware, async (req, res) => {
+async function createBooking(req, res) {
   try {
     const { courtId, date, startTime, endTime } = req.body;
 
-    // Validate required fields
     if (!courtId || !date || !startTime || !endTime) {
       return res.status(400).json({
         message: 'All fields are required'
       });
     }
 
-    // Validate court ID
     if (!mongoose.isValidObjectId(courtId)) {
       return res.status(400).json({
         message: 'Invalid court ID'
       });
     }
 
-    // Validate date and time format
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
     const timePattern = /^([01]\d|2[0-3]):[0-5]\d$/;
 
@@ -57,7 +50,6 @@ router.post('/', authMiddleware, async (req, res) => {
       });
     }
 
-    // Check whether the court exists
     const court = await Court.findById(courtId);
 
     if (!court || court.status !== 'active') {
@@ -66,7 +58,6 @@ router.post('/', authMiddleware, async (req, res) => {
       });
     }
 
-    // Prevent overlapping bookings
     const existingBooking = await Booking.findOne({
       court: courtId,
       date,
@@ -81,7 +72,6 @@ router.post('/', authMiddleware, async (req, res) => {
       });
     }
 
-    // Save booking
     const booking = await Booking.create({
       user: req.userId,
       court: courtId,
@@ -101,10 +91,10 @@ router.post('/', authMiddleware, async (req, res) => {
       message: 'Server error'
     });
   }
-});
+}
 
- // Cancel my booking
-router.patch('/:id/cancel', authMiddleware, async (req, res) => {
+// Cancel my booking
+async function cancelBooking(req, res) {
   try {
     if (!mongoose.isValidObjectId(req.params.id)) {
       return res.status(400).json({
@@ -143,11 +133,10 @@ router.patch('/:id/cancel', authMiddleware, async (req, res) => {
       message: 'Server error'
     });
   }
-});
-module.exports = router;
+}
 
- // Get my bookings
-router.get('/my', authMiddleware, async (req, res) => {
+// Get my bookings
+async function getMyBookings(req, res) {
   try {
     const bookings = await Booking.find({
       user: req.userId
@@ -163,4 +152,10 @@ router.get('/my', authMiddleware, async (req, res) => {
       message: 'Server error'
     });
   }
-});
+}
+
+module.exports = {
+  createBooking,
+  cancelBooking,
+  getMyBookings
+};

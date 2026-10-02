@@ -1,16 +1,13 @@
-
-const express = require('express');
 const bcrypt = require('bcryptjs');
-const User = require('./user-model');
+const jwt = require('jsonwebtoken');
 
-const router = express.Router();
+const User = require('../models/user-model');
 
 // Register a new user
-router.post('/register', async (req, res) => {
+async function register(req, res) {
   try {
     const { name, email, password } = req.body;
 
-    // Validate user input
     if (!name || !email || !password) {
       return res.status(400).json({
         message: 'All fields are required'
@@ -37,7 +34,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Check whether email is already registered
     const existingUser = await User.findOne({
       email: normalizedEmail
     });
@@ -48,7 +44,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Encrypt password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
@@ -65,7 +60,6 @@ router.post('/register', async (req, res) => {
         email: user.email
       }
     });
-
   } catch (error) {
     if (error.code === 11000) {
       return res.status(409).json({
@@ -74,29 +68,29 @@ router.post('/register', async (req, res) => {
     }
 
     console.error('Registration error:', error);
+
     res.status(500).json({
       message: 'Server error'
     });
   }
-});
-
-const jwt = require('jsonwebtoken');
+}
 
 // Login
-router.post('/login', async (req, res) => {
+async function login(req, res) {
   try {
     const { email, password } = req.body;
 
-    // Validate input
-    if (typeof email !== 'string' ||
-        typeof password !== 'string' ||
-        !email.trim() || !password) {
+    if (
+      typeof email !== 'string' ||
+      typeof password !== 'string' ||
+      !email.trim() ||
+      !password
+    ) {
       return res.status(400).json({
         message: 'Email and password are required'
       });
     }
 
-    // Find user in MongoDB
     const user = await User.findOne({
       email: email.trim().toLowerCase()
     });
@@ -107,7 +101,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Verify password
     const isValid = await bcrypt.compare(
       password,
       user.password
@@ -119,7 +112,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Generate JWT
     const token = jwt.sign(
       { userId: user._id.toString() },
       process.env.JWT_SECRET,
@@ -130,18 +122,22 @@ router.post('/login', async (req, res) => {
       message: 'Login successful',
       token,
       user: {
-  id: user._id,
-  name: user.name,
-  email: user.email,
-  role: user.role
-}
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     });
-
   } catch (error) {
     console.error('Login error:', error);
+
     res.status(500).json({
       message: 'Server error'
     });
   }
-});
-module.exports = router;
+}
+
+module.exports = {
+  register,
+  login
+};

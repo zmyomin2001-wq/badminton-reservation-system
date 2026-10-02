@@ -1,12 +1,9 @@
-const express = require('express');
 const mongoose = require('mongoose');
-const Court = require('./court-model');
-const authMiddleware = require('./auth-middleware');
-const adminMiddleware = require('./admin-middleware');
-const router = express.Router();
+
+const Court = require('../models/court-model');
 
 // Get all courts
-router.get('/', async (req, res) => {
+async function getCourts(req, res) {
   try {
     const courts = await Court.find().sort({ name: 1 });
 
@@ -18,10 +15,10 @@ router.get('/', async (req, res) => {
       message: 'Server error'
     });
   }
-});
+}
 
 // Create a new court
-router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
+async function createCourt(req, res) {
   try {
     const { name, pricePerHour, status } = req.body;
 
@@ -63,10 +60,10 @@ router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
       message: 'Server error'
     });
   }
-});
+}
 
 // Update a court
-router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
+async function updateCourt(req, res) {
   try {
     const { id } = req.params;
     const { name, pricePerHour, status } = req.body;
@@ -89,8 +86,10 @@ router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
       });
     }
 
-    if (status !== undefined &&
-        !['active', 'maintenance'].includes(status)) {
+    if (
+      status !== undefined &&
+      !['active', 'maintenance'].includes(status)
+    ) {
       return res.status(400).json({
         message: 'Invalid court status'
       });
@@ -135,11 +134,10 @@ router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
       message: 'Server error'
     });
   }
-});
+}
 
-module.exports = router;
 // Delete a court
-router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
+async function deleteCourt(req, res) {
   try {
     const { id } = req.params;
 
@@ -167,6 +165,11 @@ router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
       message: 'Server error'
     });
   }
-});
+}
 
-module.exports = router;
+module.exports = {
+  getCourts,
+  createCourt,
+  updateCourt,
+  deleteCourt
+};

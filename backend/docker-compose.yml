@@ -1,0 +1,28 @@
+services:
+  api:
+    build: .
+    container_name: badminton-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    networks:
+      - badminton-network
+
+  mongodb:
+    image: mongo:7
+    container_name: badminton-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - badminton-network
+
+networks:
+  badminton-network:
+
+volumes:
+  mongodb-data:

@@ -1,4 +1,4 @@
-const User = require('./user-model');
+const User = require('../models/user-model');
 
 async function adminMiddleware(req, res, next) {
   try {
