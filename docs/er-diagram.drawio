@@ -1,0 +1,30 @@
+<mxfile host="app.diagrams.net" modified="2026-10-03T00:00:00.000Z" agent="ChatGPT" version="24.7.17" type="device">
+  <diagram id="badminton-er-diagram" name="ER Diagram">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="user" value="&lt;b&gt;USER&lt;/b&gt;&lt;hr&gt;_id (PK)&lt;br&gt;name&lt;br&gt;email&lt;br&gt;password&lt;br&gt;role&lt;br&gt;createdAt&lt;br&gt;updatedAt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1f1f1f;fontColor=#ffffff;strokeColor=#ffffff;align=left;spacingLeft=10;spacingTop=8;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="240" height="220" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="booking" value="&lt;b&gt;BOOKING&lt;/b&gt;&lt;hr&gt;_id (PK)&lt;br&gt;user (FK)&lt;br&gt;court (FK)&lt;br&gt;date&lt;br&gt;startTime&lt;br&gt;endTime&lt;br&gt;status&lt;br&gt;createdAt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1f1f1f;fontColor=#ffffff;strokeColor=#ffffff;align=left;spacingLeft=10;spacingTop=8;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="465" y="120" width="240" height="240" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="court" value="&lt;b&gt;COURT&lt;/b&gt;&lt;hr&gt;_id (PK)&lt;br&gt;name&lt;br&gt;pricePerHour&lt;br&gt;status&lt;br&gt;createdAt&lt;br&gt;updatedAt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1f1f1f;fontColor=#ffffff;strokeColor=#ffffff;align=left;spacingLeft=10;spacingTop=8;verticalAlign=top;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="850" y="120" width="240" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="user-booking" value="1:N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ffffff;fontColor=#ffffff;endArrow=none;startArrow=none;labelBackgroundColor=#1f1f1f;" edge="1" parent="1" source="user" target="booking">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="booking-court" value="N:1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ffffff;fontColor=#ffffff;endArrow=none;startArrow=none;labelBackgroundColor=#1f1f1f;" edge="1" parent="1" source="booking" target="court">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
