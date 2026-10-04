@@ -546,13 +546,6 @@ All booking endpoints require JWT authentication.
 
 POST /bookings
 
-## Create Booking
-
-### Endpoint
-
-```http
-
-POST /bookings
 
 ```
 
@@ -656,7 +649,7 @@ JWT required.
 
 ```http
 
-PUT /bookings/
+PUT /bookings/:id
 
 ```
 
@@ -666,7 +659,7 @@ JWT required.
 
 ### URL Parameter
 
-`` = Booking ObjectId
+`id` = Booking ObjectId
 
 ### Request Body
 
@@ -691,7 +684,7 @@ All fields are required.
 
 Date must use `YYYY-MM-DD` format.
 
-Time must use `HH` format.
+Time must use `HH:mm` format.
 
 The booking time must be in the future.
 
@@ -876,7 +869,7 @@ JWT required.
 
 ```http
 
-DELETE /bookings/
+DELETE /bookings/:id
 
 ```
 
@@ -886,7 +879,7 @@ JWT required.
 
 ### URL Parameter
 
-`` = Booking ObjectId
+`id` = Booking ObjectId
 
 ### Success Response
 
